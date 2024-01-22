@@ -3,7 +3,6 @@
 [![Flutter Community: device_info_plus](https://fluttercommunity.dev/_github/header/device_info_plus)](https://github.com/fluttercommunity/community)
 
 [![pub package](https://img.shields.io/pub/v/device_info_plus.svg)](https://pub.dev/packages/device_info_plus)
-[![pub points](https://img.shields.io/pub/points/device_info_plus?color=2E8B57&label=pub%20points)](https://pub.dev/packages/device_info_plus/score)
 [![device_info_plus](https://github.com/fluttercommunity/plus_plugins/actions/workflows/device_info_plus.yaml/badge.svg)](https://github.com/fluttercommunity/plus_plugins/actions/workflows/device_info_plus.yaml)
 
 <p class="center">
@@ -15,7 +14,7 @@ Get current device information from within the Flutter application.
 
 | Android | iOS | MacOS | Web | Linux | Windows |
 | :-----: | :-: | :---: | :-: | :---: | :-----: |
-|   ✅    | ✅  |  ✅   | ✅  |  ✅   |   ✅    |
+|   ✔️    | ✔️  |  ✔️   | ✔️  |  ✔️   |   ✔️    |
 
 # Usage
 
@@ -39,26 +38,19 @@ WebBrowserInfo webBrowserInfo = await deviceInfo.webBrowserInfo;
 print('Running on ${webBrowserInfo.userAgent}');  // e.g. "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:61.0) Gecko/20100101 Firefox/61.0"
 ```
 
-The plugin provides a `data` method that returns platform-specific device
-information in a generic way, which can be used for crash-reporting purposes.
-
-However, the data provided by this `data` method is currently not serializable
-(i.e. it is not 100% JSON compatible) and shouldn't be treated as such.
+One common use case for this plugin is obtaining device information for telemetry or crash-reporting purposes. In this scenario your app is not interested in specific properties, instead it wants to send all it knows about the device to your backend service for further analysis. You can leverage `deviceInfo` property, which returns platform-specific device information in a generic way. You then use it's `toMap` method to serialize all known properties to a `Map`. Your backend service should be prepared to handle new properties, which can be added to this plugin in the future.
 
 ```dart
 import 'package:device_info_plus/device_info_plus.dart';
 
 final deviceInfoPlugin = DeviceInfoPlugin();
 final deviceInfo = await deviceInfoPlugin.deviceInfo;
-final allInfo = deviceInfo.data;
+final map = deviceInfo.toMap();
+// Push [map] to your service.
 ```
 
-> **Note**
->
-> To get serial number on Android your app needs to meet one of official [requirements](https://developer.android.com/reference/android/os/Build#getSerial())
-> In case the app doesn't meet any of requirements plugin will return `unknown`.
+You will find links to the API docs on the [pub page](https://pub.dev/packages/device_info_plus).
 
-## Learn more
+Check out our documentation website to learn more. [Plus plugins documentation](https://plus.fluttercommunity.dev/docs/overview)
 
-- [API Documentation](https://pub.dev/documentation/device_info_plus/latest/device_info_plus/device_info_plus-library.html)
-- [Plugin documentation website](https://plus.fluttercommunity.dev/docs/device_info_plus/overview)
+**Important:** As of January 2021, the Flutter team is no longer accepting non-critical PRs for the original set of plugins in `flutter/plugins`, and instead they should be submitted in this project. [You can read more about this announcement here.](https://github.com/flutter/plugins/blob/master/CONTRIBUTING.md#important-note) as well as [in the Flutter 2 announcement blog post.](https://medium.com/flutter/whats-new-in-flutter-2-0-fe8e95ecc65)
